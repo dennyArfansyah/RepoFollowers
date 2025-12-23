@@ -66,7 +66,7 @@ Given the user has connectivity
 
 ## Flowchart
 
-Will be update soon
+![](flow_chart.png)
 
 ## Model Specs
 
@@ -114,4 +114,4 @@ GET /users/{username}/followers
 ---
 
 ## App Architecture
-Will be update soon
+![](architecture.png)
