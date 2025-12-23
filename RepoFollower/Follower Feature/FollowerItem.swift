@@ -1,6 +1,6 @@
 //
 //  FollowerItem.swift
-//  FeedEssentialClone
+//  RepoFollower
 //
 //  Created by Denny Arfansyah on 23/12/2025.
 //

@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import FeedEssentialClone
+@testable import RepoFollower
 
 final class FeedEssentialCloneTests: XCTestCase {
 
