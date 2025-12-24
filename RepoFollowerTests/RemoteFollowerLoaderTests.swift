@@ -32,10 +32,10 @@ final class RemoteFollowerLoaderTests: XCTestCase {
         let (sut, client) = createSUT()
         client.error = NSError(domain: "Test Error", code: 0)
         
-        var capturedError: RemoteFollowerLoader.Error?
-        sut.load { error in capturedError = error }
+        var capturedErrors = [RemoteFollowerLoader.Error]()
+        sut.load { capturedErrors.append($0)  }
         
-        XCTAssertEqual(capturedError, .connectivity)
+        XCTAssertEqual(capturedErrors, [.connectivity])
     }
     
     // MARK: - Helpers
