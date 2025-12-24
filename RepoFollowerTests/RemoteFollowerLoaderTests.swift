@@ -21,8 +21,8 @@ final class RemoteFollowerLoaderTests: XCTestCase {
         let (sut, client) = createSUT(url: url)
         
         // act
-        sut.load()
-        sut.load()
+        sut.load { _ in }
+        sut.load { _ in }
         
         // Assert
         XCTAssertEqual(client.requestedURLs, [url, url])
