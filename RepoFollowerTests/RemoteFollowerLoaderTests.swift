@@ -43,13 +43,16 @@ final class RemoteFollowerLoaderTests: XCTestCase {
     func test_load_deliversErrorOnNon200HTTPResponse() {
         let (sut, client) = createSUT()
         
-        var capturedErrors = [RemoteFollowerLoader.Error]()
-        sut.load { capturedErrors.append($0)  }
+        let samples = [199, 201, 300, 400, 500]
         
-        let clientError = NSError(domain: "Test Error", code: 0)
-        client.complete(withStatusCode: 400)
-        
-        XCTAssertEqual(capturedErrors, [.invalidData])
+        samples.enumerated().forEach { index, code in
+            var capturedErrors = [RemoteFollowerLoader.Error]()
+            sut.load { capturedErrors.append($0)  }
+            
+            client.complete(withStatusCode: code, at: index)
+            
+            XCTAssertEqual(capturedErrors, [.invalidData])
+        }
     }
     
     // MARK: - Helpers
