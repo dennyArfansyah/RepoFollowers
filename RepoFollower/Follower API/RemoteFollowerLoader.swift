@@ -31,11 +31,7 @@ public final class RemoteFollowerLoader {
             
             switch result {
             case let .success(data, response):
-                if let items = try? FollowerItemMapper.map(data, response) {
-                    completion(.success(items))
-                } else {
-                    completion(.error(.invalidData))
-                }
+                completion(FollowerItemMapper.map(data, from: response))
             case .error:
                 completion(.error(.connectivity))
             }
