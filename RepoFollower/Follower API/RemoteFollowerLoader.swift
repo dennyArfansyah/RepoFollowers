@@ -40,9 +40,8 @@ public final class RemoteFollowerLoader {
             
             switch result {
             case let .success(data, response):
-                if response.statusCode == 200,
-                   let followers = try? JSONDecoder().decode([Item].self, from: data) {
-                    completion(.success(followers.map { $0.item }))
+                if let items = try? FollowerItemMapper.map(data, response) {
+                    completion(.success(items))
                 } else {
                     completion(.error(.invalidData))
                 }
@@ -53,14 +52,27 @@ public final class RemoteFollowerLoader {
     }
 }
 
-private struct Item: Decodable {
-    let id: Int
-    let login: String
-    let avatar_url: String
-    let repos_url: String
-    
-    var item: FollowerItem {
-        return FollowerItem(id: id, login: login, avatarURL: avatar_url, reposURL: repos_url)
+private class FollowerItemMapper {
+    private struct Item: Decodable {
+        let id: Int
+        let login: String
+        let avatar_url: String
+        let repos_url: String
+        
+        var item: FollowerItem {
+            return FollowerItem(id: id,
+                                login: login,
+                                avatarURL: avatar_url,
+                                reposURL: repos_url)
+        }
+    }
+
+    static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [FollowerItem] {
+        guard response.statusCode == 200 else {
+            throw RemoteFollowerLoader.Error.invalidData
+        }
+        
+        let root = try JSONDecoder().decode([Item].self, from: data)
+        return root.map { $0.item }
     }
 }
-                    
