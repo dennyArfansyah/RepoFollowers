@@ -31,13 +31,10 @@ final class RemoteFollowerLoaderTests: XCTestCase {
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = createSUT()
         
-        var capturedErrors = [RemoteFollowerLoader.Error]()
-        sut.load { capturedErrors.append($0)  }
-        
-        let clientError = NSError(domain: "Test Error", code: 0)
-        client.complete(with: clientError)
-        
-        XCTAssertEqual(capturedErrors, [.connectivity])
+        expect(sut, toCompleteWithError: .connectivity, when: {
+            let clientError = NSError(domain: "Test Error", code: 0)
+            client.complete(with: clientError)
+        })
     }
     
     func test_load_deliversErrorOnNon200HTTPResponse() {
@@ -46,26 +43,19 @@ final class RemoteFollowerLoaderTests: XCTestCase {
         let samples = [199, 201, 300, 400, 500]
         
         samples.enumerated().forEach { index, code in
-            var capturedErrors = [RemoteFollowerLoader.Error]()
-            sut.load { capturedErrors.append($0)  }
-            
-            client.complete(withStatusCode: code, at: index)
-            
-            XCTAssertEqual(capturedErrors, [.invalidData])
+            expect(sut, toCompleteWithError: .invalidData, when: {
+                client.complete(withStatusCode: code, at: index)
+            })
         }
     }
     
     func test_load_deliversErrorOn200HTTPResponseWithInvalidJSON() {
         let (sut, client) = createSUT()
         
-        var capturedErrors = [RemoteFollowerLoader.Error]()
-        sut.load { capturedErrors.append($0)  }
-        
-        let invalidJSON = Data("invalid json".utf8)
-        client.complete(withStatusCode: 200, data: invalidJSON)
-        
-        XCTAssertEqual(capturedErrors, [.invalidData])
-        
+        expect(sut, toCompleteWithError: .invalidData, when: {
+            let invalidJSON = Data("invalid json".utf8)
+            client.complete(withStatusCode: 200, data: invalidJSON)
+        })
     }
     
     // MARK: - Helpers
@@ -74,6 +64,19 @@ final class RemoteFollowerLoaderTests: XCTestCase {
         let client = HTTPClientSpy()
         let sut = RemoteFollowerLoader(url: url, client: client)
         return (sut, client)
+    }
+    
+    private func expect(_ sut: RemoteFollowerLoader,
+                        toCompleteWithError error: RemoteFollowerLoader.Error,
+                        when action: () -> Void,
+                        file: StaticString = #filePath,
+                        line: UInt = #line) {
+        var capturedErrors = [RemoteFollowerLoader.Error]()
+        sut.load { capturedErrors.append($0)  }
+        
+        action()
+        
+        XCTAssertEqual(capturedErrors, [error], file: file, line: line)
     }
     
     private class HTTPClientSpy: HTTPClient {
