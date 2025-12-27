@@ -5,8 +5,8 @@
 //  Created by Denny Arfansyah on 23/12/2025.
 //
 
-import XCTest
 import RepoFollower
+import XCTest
 
 final class RemoteFollowerLoaderTests: XCTestCase {
     func test_init_doesNotRequestDataFromURL() {
