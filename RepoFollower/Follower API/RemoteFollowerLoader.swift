@@ -40,8 +40,8 @@ public final class RemoteFollowerLoader {
             
             switch result {
             case let .success(data, _):
-                if let _ = try? JSONSerialization.jsonObject(with: data) {
-                    completion(.success([]))
+                if let followers = try? JSONDecoder().decode([FollowerItem].self, from: data) {
+                    completion(.success(followers))
                 } else {
                     completion(.error(.invalidData))
                 }
