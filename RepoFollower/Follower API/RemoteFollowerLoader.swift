@@ -39,8 +39,9 @@ public final class RemoteFollowerLoader {
         client.get(from: url) { result in
             
             switch result {
-            case let .success(data, _):
-                if let followers = try? JSONDecoder().decode([FollowerItem].self, from: data) {
+            case let .success(data, response):
+                if response.statusCode == 200,
+                    let followers = try? JSONDecoder().decode([FollowerItem].self, from: data) {
                     completion(.success(followers))
                 } else {
                     completion(.error(.invalidData))
