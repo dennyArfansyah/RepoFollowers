@@ -42,30 +42,3 @@ public final class RemoteFollowerLoader {
         }
     }
 }
-
-private class FollowerItemMapper {
-    private struct Item: Decodable {
-        let id: Int
-        let login: String
-        let avatar_url: String
-        let repos_url: String
-        
-        var item: FollowerItem {
-            return FollowerItem(id: id,
-                                login: login,
-                                avatarURL: avatar_url,
-                                reposURL: repos_url)
-        }
-    }
-    
-    static var OK_200: Int { 200 }
-
-    static func map(_ data: Data, _ response: HTTPURLResponse) throws -> [FollowerItem] {
-        guard response.statusCode == OK_200 else {
-            throw RemoteFollowerLoader.Error.invalidData
-        }
-        
-        let root = try JSONDecoder().decode([Item].self, from: data)
-        return root.map { $0.item }
-    }
-}
