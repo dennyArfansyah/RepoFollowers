@@ -58,6 +58,18 @@ final class RemoteFollowerLoaderTests: XCTestCase {
         })
     }
     
+    func test_load_deliversNoItemsOn200HTTPResponseWithEmptyJSONList() {
+        let (sut, client) = createSUT()
+        
+        var capturedResults = [RemoteFollowerLoader.Result]()
+        sut.load { capturedResults.append($0)  }
+        
+        let emptyListJSON = Data("[]".utf8)
+        client.complete(withStatusCode: 200, data: emptyListJSON)
+        
+        XCTAssertEqual(capturedResults, [.success([])])
+    }
+    
     // MARK: - Helpers
     
     private func createSUT(url: URL = URL(string: "a-url.com")!) -> (sut: RemoteFollowerLoader, client: HTTPClientSpy) {

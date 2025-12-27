@@ -39,8 +39,12 @@ public final class RemoteFollowerLoader {
         client.get(from: url) { result in
             
             switch result {
-            case .success:
-                completion(.error(.invalidData))
+            case let .success(data, _):
+                if let _ = try? JSONSerialization.jsonObject(with: data) {
+                    completion(.success([]))
+                } else {
+                    completion(.error(.invalidData))
+                }
             case .error:
                 completion(.error(.connectivity))
             }
