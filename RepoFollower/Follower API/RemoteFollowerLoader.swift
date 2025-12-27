@@ -25,19 +25,24 @@ public final class RemoteFollowerLoader {
         case invalidData
     }
     
+    public enum Result: Equatable {
+        case success([FollowerItem])
+        case error(Error)
+    }
+    
     public init(url: URL, client: HTTPClient) {
         self.url = url
         self.client = client
     }
     
-    public func load(completion: @escaping (Error) -> Void) {
+    public func load(completion: @escaping (Result) -> Void) {
         client.get(from: url) { result in
             
             switch result {
             case .success:
-                completion(.invalidData)
+                completion(.error(.invalidData))
             case .error:
-                completion(.connectivity)
+                completion(.error(.connectivity))
             }
         }
     }

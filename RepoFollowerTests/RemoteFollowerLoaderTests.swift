@@ -71,12 +71,12 @@ final class RemoteFollowerLoaderTests: XCTestCase {
                         when action: () -> Void,
                         file: StaticString = #filePath,
                         line: UInt = #line) {
-        var capturedErrors = [RemoteFollowerLoader.Error]()
-        sut.load { capturedErrors.append($0)  }
+        var capturedResults = [RemoteFollowerLoader.Result]()
+        sut.load { capturedResults.append($0)  }
         
         action()
         
-        XCTAssertEqual(capturedErrors, [error], file: file, line: line)
+        XCTAssertEqual(capturedResults, [.error(error)], file: file, line: line)
     }
     
     private class HTTPClientSpy: HTTPClient {

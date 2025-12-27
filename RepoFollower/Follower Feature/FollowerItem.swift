@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FollowerItem {
+public struct FollowerItem: Equatable {
     let id: Int
     let login: String
     let avatarURL: URL
