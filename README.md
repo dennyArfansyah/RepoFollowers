@@ -86,29 +86,27 @@ GET /users/{username}/followers
 
 200 RESPONSE
 
-{
-	"items": [
-		{
-			"id": xxx
-			"login": "a username",
-			"avatar_url": "https://a-avatar.url"
-			"repos_url": "https://a-repo.url",
-		},
-		{
-			"id": xxxx
-			"login": "another username",
-			"avatar_url": "https://another-avatar.url"
-			"repos_url": "https://another-repo.url",
-		},
-		{
-			"id": xxxxx
-			"login": "even another username",
-			"avatar_url": "https://even-another-avatar.url"
-			"repos_url": "https://even-another-repo.url",
-		},
-		...
-	]
-}
+[
+	{
+		"id": 456,
+		"login": "a username",
+		"avatar_url": "https://a-avatar.url",
+		"repos_url": "https://a-repo.url",
+	},
+	{
+		"id": 467,
+		"login": "another username",
+		"avatar_url": "https://another-avatar.url",
+		"repos_url": "https://another-repo.url",
+	},
+	{
+		"id": 458,
+		"login": "even another username",
+		"avatar_url": "https://even-another-avatar.url",
+		"repos_url": "https://even-another-repo.url",
+	},
+	...
+]
 ```
 
 ---
