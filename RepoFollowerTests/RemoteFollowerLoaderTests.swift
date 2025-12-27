@@ -92,7 +92,15 @@ final class RemoteFollowerLoaderTests: XCTestCase {
     private func createSUT(url: URL = URL(string: "a-url.com")!) -> (sut: RemoteFollowerLoader, client: HTTPClientSpy) {
         let client = HTTPClientSpy()
         let sut = RemoteFollowerLoader(url: url, client: client)
+        trancForMemoryLeak(sut)
+        trancForMemoryLeak(client)
         return (sut, client)
+    }
+    
+    private func trancForMemoryLeak(_ instance: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
+        addTeardownBlock { [weak instance] in
+            XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak", file: file, line: line)
+        }
     }
     
     private func makeItem(id: Int, login: String, avatarURL: String, reposURL: String) -> (model: FollowerItem, json: [String: Any]) {
