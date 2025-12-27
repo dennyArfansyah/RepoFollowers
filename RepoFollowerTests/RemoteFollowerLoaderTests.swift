@@ -63,7 +63,7 @@ final class RemoteFollowerLoaderTests: XCTestCase {
         let (sut, client) = createSUT()
         
         expect(sut, toCompleteWithResults: .success([]), when: {
-            let emptyListJSON = Data("[]".utf8)
+            let emptyListJSON = makeItemsJSON([])
             client.complete(withStatusCode: 200, data: emptyListJSON)
         })
     }
