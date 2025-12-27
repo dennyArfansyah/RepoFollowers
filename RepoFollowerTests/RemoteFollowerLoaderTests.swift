@@ -87,6 +87,19 @@ final class RemoteFollowerLoaderTests: XCTestCase {
         })
     }
     
+    func test_load_doesNotDeliverresultAfterSUTInstanceHasBeenDeallocated() {
+        let url = URL(string: "http://any-url.com")!
+        let client = HTTPClientSpy()
+        var sut: RemoteFollowerLoader? = RemoteFollowerLoader(url: url, client: client)
+        
+        var capturedResults = [RemoteFollowerLoader.Result]()
+        sut?.load { capturedResults.append($0) }
+        
+        sut = nil
+        client.complete(withStatusCode: 200, data: makeItemsJSON([]))
+        XCTAssertTrue(capturedResults.isEmpty)
+    }
+    
     // MARK: - Helpers
     
     private func createSUT(url: URL = URL(string: "a-url.com")!) -> (sut: RemoteFollowerLoader, client: HTTPClientSpy) {
