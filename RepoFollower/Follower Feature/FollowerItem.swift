@@ -18,12 +18,3 @@ public struct FollowerItem: Equatable {
         self.reposURL = reposURL
     }
 }
-
-extension FollowerItem: Codable {
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case login
-        case avatarURL = "avatar_url"
-        case reposURL = "repos_url"
-    }
-}
